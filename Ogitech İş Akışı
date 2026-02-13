@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ogitech İş Akış Diyagramı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 50px;
+            font-size: 2.5em;
+        }
+        
+        .flow-diagram {
+            position: relative;
+            padding: 20px;
+        }
+        
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .flow-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .flow-box .icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+        
+        .flow-box .label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1em;
+        }
+        
+        .arrow-down {
+            width: 4px;
+            height: 50px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #764ba2;
+        }
+        
+        .branch-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .branch-container::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .branch-line {
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            margin-bottom: 0;
+        }
+        
+        .process-stage {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-weight: 600;
+            margin: 30px auto;
+            text-align: center;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .multi-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .flow-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .consultation-box {
+            background: #f7fafc;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 30px 40px;
+            margin: 30px auto;
+            max-width: 320px;
+            text-align: center;
+            font-weight: 600;
+            color: #2d3748;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            font-size: 1.3em;
+        }
+        
+        /* Proje Yönetimi Network Icon */
+        .network-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+        
+        .network-center {
+            width: 30px;
+            height: 30px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+        }
+        
+        .network-node {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .node-1 {
+            background: #4ecdc4;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .node-2 {
+            background: #ffd93d;
+            top: 15%;
+            right: 0;
+        }
+        
+        .node-3 {
+            background: #ff9a3d;
+            bottom: 15%;
+            right: 5%;
+        }
+        
+        .node-4 {
+            background: #95a5a6;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .node-5 {
+            background: #3dd1ff;
+            bottom: 15%;
+            left: 5%;
+        }
+        
+        .node-6 {
+            background: #6bcf7f;
+            top: 15%;
+            left: 0;
+        }
+        
+        .network-line {
+            position: absolute;
+            background: #ddd;
+            height: 2px;
+            transform-origin: center;
+        }
+        
+        .line-1 {
+            width: 28px;
+            top: 25px;
+            left: 26px;
+            transform: rotate(-45deg);
+        }
+        
+        .line-2 {
+            width: 28px;
+            top: 25px;
+            right: 26px;
+            transform: rotate(45deg);
+        }
+        
+        .line-3 {
+            width: 28px;
+            bottom: 25px;
+            right: 26px;
+            transform: rotate(-45deg);
+        }
+        
+        .line-4 {
+            width: 28px;
+            bottom: 25px;
+            left: 26px;
+            transform: rotate(45deg);
+        }
+        
+        @media (max-width: 768px) {
+            .branch-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .multi-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .branch-container::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 İş Akış Diyagramı</h1>
+        
+        <div class="flow-diagram">
+            <div class="flow-content">
+                <!-- 1. Talep -->
+                <div class="flow-row">
+                    <div class="flow-box" style="background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); color: white; border: none;">
+                        <div class="label" style="color: white; font-size: 1.3em;">📞 TALEP</div>
+                        <div style="font-size: 0.9em; margin-top: 10px; opacity: 0.95;">Telefon / E-posta / WhatsApp</div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 2. Call Center -->
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <div class="icon">📞</div>
+                        <div class="label">Call Center</div>
+                        <div style="font-size: 0.85em; color: #718096; margin-top: 8px;">24/7</div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 3. Çözüm Masası - ENLARGED -->
+                <div class="consultation-box">
+                    🎯 ÇÖZÜM MASASI
+                </div>
+                
+                <!-- 4. Branching to Services -->
+                <div class="branch-container">
+                    <div class="branch">
+                        <div class="branch-line"></div>
+                        <div class="flow-box">
+                            <div class="icon">🛟</div>
+                            <div class="label">Servis</div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch">
+                        <div class="branch-line"></div>
+                        <div class="flow-box">
+                            <div class="icon">🔧</div>
+                            <div class="label">Tamir-Bakım</div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch">
+                        <div class="branch-line"></div>
+                        <div class="flow-box">
+                            <div class="icon">🐟</div>
+                            <div class="label">Satış Fırsatları</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 5. Proje Yönetimi -->
+                <div class="process-stage">
+                    ⚙️ Ekip Belirleme
+                </div>
+                
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <!-- Network Icon -->
+                        <div class="network-icon">
+                            <div class="network-line line-1"></div>
+                            <div class="network-line line-2"></div>
+                            <div class="network-line line-3"></div>
+                            <div class="network-line line-4"></div>
+                            <div class="network-center"></div>
+                            <div class="network-node node-1"></div>
+                            <div class="network-node node-2"></div>
+                            <div class="network-node node-3"></div>
+                            <div class="network-node node-4"></div>
+                            <div class="network-node node-5"></div>
+                            <div class="network-node node-6"></div>
+                        </div>
+                        <div class="label">Proje Yönetimi</div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 6. İş Emirleri -->
+                <div class="process-stage">
+                    📋 İş Emirleri
+                </div>
+                
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <div class="icon">📍</div>
+                        <div class="label">İş Süreçleri</div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 7. Onay Süreçleri -->
+                <div class="consultation-box" style="background: #fff5f5; border-color: #fc8181; font-size: 1.2em; padding: 25px 35px;">
+                    ✅ ONAY SÜREÇLERİ<br>
+                    <span style="font-size: 0.85em; font-weight: 500;">(QPIC-RS ile yönetilir)</span>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 8. Saha Kontrolü -->
+                <div class="flow-row">
+                    <div class="flow-box" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="icon">👷</div>
+                        <div class="label">Saha Ekipleri Kontrol</div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- 9. Final Processes -->
+                <div class="multi-row">
+                    <div class="flow-box">
+                        <div class="icon">🚚</div>
+                        <div class="label">Sevkiyat-Lojistik</div>
+                        <div style="font-size: 0.85em; color: #718096; margin-top: 8px;">Transfer/Stok/Teslim</div>
+                    </div>
+                    
+                    <div class="flow-box">
+                        <div class="icon">📁</div>
+                        <div class="label">Dijital Arşiv</div>
+                        <div style="font-size: 0.85em; color: #718096; margin-top: 8px;">Evrak Yönetimi</div>
+                    </div>
+                    
+                    <div class="flow-box">
+                        <div class="icon">✏️</div>
+                        <div class="label">Muhasebe İşlemleri</div>
+                        <div style="font-size: 0.85em; color: #718096; margin-top: 8px;">Faturalandırma</div>
+                    </div>
+                    
+                    <div class="flow-box">
+                        <div class="icon">🏔️</div>
+                        <div class="label">Satış Gücü Planlama</div>
+                        <div style="font-size: 0.85em; color: #718096; margin-top: 8px;">Prim Hesaplama</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 50px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+                    <h2 style="margin-bottom: 10px;">✨ İşlem Tamamlandı</h2>
+                    <p style="opacity: 0.9;">Tüm süreçler başarıyla yönetildi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
